@@ -24,6 +24,7 @@ jobs:
 
       - name: Build Image
         run: |
+          # Build the image
           ./build-image.sh
 
           # Write out the channel configuration
@@ -32,6 +33,9 @@ jobs:
           # Copy the image to the local folder with a better name
           export RELEASE_TAG=$(date +"%Y%m%d%H%M")
           echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
+
+          # Compress the image with gzip
+          gzip guix-live-${RELEASE_TAG}.qcow2
 
       - name: Prepare Release Notes
         run: |
@@ -44,7 +48,7 @@ jobs:
         with:
           name: Guix Live Image - ${{ env.RELEASE_TAG }}
           tag_name: v${{ env.RELEASE_TAG }}
-          files: guix-live-${{ env.RELEASE_TAG }}.qcow2
+          files: guix-live-${{ env.RELEASE_TAG }}.qcow2.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: SystemCrafters/guix-live-image
