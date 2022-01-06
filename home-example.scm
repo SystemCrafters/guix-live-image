@@ -12,7 +12,9 @@
   (shepherd-service
    (provision '(syncthing))
    (documentation "Run and control syncthing.")
-   (start #~(make-forkexec-constructor '("syncthing" "-no-browser")))
+   (start #~(make-forkexec-constructor
+             (list #$(file-append syncthing "/bin/syncthing")
+                   "-no-browser")))
    (stop #~(make-kill-destructor))))
 
 (home-environment
