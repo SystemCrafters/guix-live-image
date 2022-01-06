@@ -19,15 +19,9 @@ we're making improvements to the configuration.**
 
 ## Instructions
 
-1. Download a recently built `.qcow2.gz` from this repo's
+1. Download a recently built `.qcow2` from this repo's
    [release page](https://github.com/SystemCrafters/guix-live-image/releases)
-2. Decompress the `.gz` file you downloaded (update `guix-image-*` path if needed):
-
-```
-gzip -d guix-image-*.qcow2.gz > guix-live.qcow2
-```
-
-3. Launch the image in QEMU (update the image path in the last line!):
+2. Launch the image in QEMU (update the image path in the last line!):
 
 ```
 qemu-system-x86_64 \

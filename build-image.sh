@@ -19,7 +19,7 @@ die() {
 
 # Build the image
 printf 'Attempting to build the image...\n\n'
-image=$(guix system image 'config.scm') \
+image=$(guix system image -t qcow2 --volatile 'config.scm') \
     || die 'Could not create image.'
 
 release_tag=$(date +"%Y%m%d%H%M")

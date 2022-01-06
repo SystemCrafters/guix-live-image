@@ -34,9 +34,6 @@ jobs:
           export RELEASE_TAG=$(date +"%Y%m%d%H%M")
           echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
 
-          # Compress the image with gzip
-          gzip guix-live-${RELEASE_TAG}.qcow2
-
       - name: Prepare Release Notes
         run: |
           echo $'This live image was prepared with the following channel configuration:\r\n\r\n```\r\n' > release-notes.md
@@ -48,7 +45,7 @@ jobs:
         with:
           name: Guix Live Image - ${{ env.RELEASE_TAG }}
           tag_name: v${{ env.RELEASE_TAG }}
-          files: guix-live-${{ env.RELEASE_TAG }}.qcow2.gz
+          files: guix-live-${{ env.RELEASE_TAG }}.qcow2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: SystemCrafters/guix-live-image
