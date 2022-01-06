@@ -1,0 +1,50 @@
+name: Build Guix Live Image
+
+on:
+  push:
+    branches:
+      - master
+
+  schedule:
+    # build every week
+    - cron: "0 0 */7 * *"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Install Guix
+        uses: PromyLOPh/guix-install-action@v1
+
+      - name: Build Image
+        run: |
+          ./build-image.sh
+
+          # Write out the channel configuration
+          guix describe -f channels > ./channels.scm
+
+          # Copy the image to the local folder with a better name
+          export RELEASE_TAG=$(date +"%Y%m%d%H%M")
+          echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
+
+      - name: Prepare Release Notes
+        run: |
+          echo $'This live image was prepared with the following channel configuration:\r\n\r\n```\r\n' > release-notes.md
+          cat ./channels.scm >> release-notes.md
+          echo $'\r\n```' >> release-notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Guix Live Image - ${{ env.RELEASE_TAG }}
+          tag_name: v${{ env.RELEASE_TAG }}
+          files: guix-live-${{ env.RELEASE_TAG }}.qcow2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: SystemCrafters/guix-live-image
