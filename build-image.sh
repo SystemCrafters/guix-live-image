@@ -25,8 +25,6 @@ image=$(guix system image 'config.scm') \
 release_tag=$(date +"%Y%m%d%H%M")
 target_file=./guix-live-${release_tag}.qcow2
 
-rm $target_file
-
 cp "${image}" "${target_file}"  ||
     die 'An error occurred while copying.'
 
